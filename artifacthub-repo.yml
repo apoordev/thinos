@@ -1,0 +1,8 @@
+# This file is completely optional, but if you want to index your image on https://artifacthub.io/ you can, by 
+# adding the Repository ID and your data there on `owners`. This makes it so we can all have a fancy index of all custom
+# images. If you dont want to be on that, dont worry, this should not do anything by itself
+
+repositoryID: fa6ad0ee-a302-4955-8f63-1da7854fe828 # Fill in with your own credentials 
+owners: # (optional, used to claim repository ownership)
+  - name: Barrett Williamson
+    email: williamsonbarrett@gmail.com
