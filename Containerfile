@@ -4,8 +4,7 @@ FROM ghcr.io/apoordev/sericea-main:latest
 # CentOS base images: quay.io/centos-bootc/centos-bootc:stream10
 
 COPY ./build.sh /tmp/build.sh
-
-RUN find ./just -iname '*.just' -exec printf "\n\n" \; -exec cat {} \; >> /usr/share/ublue-os/just/70-thinos.just
+COPY just /tmp/just/
 
 RUN mkdir -p /var/lib/alternatives && \
     /tmp/build.sh && \
