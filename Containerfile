@@ -9,4 +9,5 @@ RUN mkdir -p /var/lib/alternatives && \
     /tmp/build.sh && \
     ostree container commit && \
     bootc container lint
-    
+
+RUN find just -iname '*.just' -exec printf "\n\n" \; -exec cat {} \; >> /usr/share/ublue-os/just/70-thinos.just
