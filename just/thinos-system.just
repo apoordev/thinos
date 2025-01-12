@@ -6,9 +6,10 @@
 
 # [group('System')]
 toggle-pvevdi: distrobox-check-fedora
-    distrobox enter -n fedora -- bash -c 'sudo dnf python3-pip python3-tkinter virt-viewer git -y && \
+    distrobox enter -n fedora -- bash -c 'sudo dnf install python3-pip python3-tkinter virt-viewer git -y && \
         cd ~/.local/share && git clone https://github.com/apoordev/PVE-VDIClient.git && cd PVE-VDIClient && \
         chmod +x requirements.sh && ./requirements.sh && \
+        mkdir ~/.local/share/applications && \
         cp VDIClient.desktop ~/.local/share/applicaions/'
     echo "You MUST create a config at ~/.config/VDIClient/vdiclient.ini"
     echo "The Program WILL NOT START without a proper config."
