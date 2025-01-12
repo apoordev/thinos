@@ -57,7 +57,6 @@ validate $image $tag $flavor:
     set -eou pipefail
     declare -A images={{ images }}
     declare -A tags={{ tags }}
-    declare -A flavors={{ flavors }}
 
     # Handle Stable Daily
     if [[ "${tag}" == "stable-daily" ]]; then
@@ -66,7 +65,6 @@ validate $image $tag $flavor:
 
     checkimage="${images[${image}]-}"
     checktag="${tags[${tag}]-}"
-    checkflavor="${flavors[${flavor}]-}"
 
     # Validity Checks
     if [[ -z "$checkimage" ]]; then
@@ -75,10 +73,6 @@ validate $image $tag $flavor:
     fi
     if [[ -z "$checktag" ]]; then
         echo "Invalid tag..."
-        exit 1
-    fi
-    if [[ -z "$checkflavor" ]]; then
-        echo "Invalid flavor..."
         exit 1
     fi
     if [[ ! "$checktag" =~ latest && "$checkflavor" =~ hwe|asus|surface ]]; then
