@@ -2,9 +2,9 @@
 ########################
 ### thinos-system.just
 ########################
-
 # Toggle PVE-VDIClient
-#[group('System')]
+
+# [group('System')]
 toggle-pvevdi: distrobox-check-fedora
     distrobox enter -n fedora -- bash -c 'sudo dnf python3-pip python3-tkinter virt-viewer git -y && \
         cd ~/.local/share && git clone https://github.com/apoordev/PVE-VDIClient.git && cd PVE-VDIClient && \
