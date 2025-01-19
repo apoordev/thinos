@@ -2,3 +2,5 @@
 <h5 align="center">An Immutable Linux Desktop for Thin Devices</h5>
 
 [![Latest Images](https://github.com/apoordev/thinos/actions/workflows/build.yml/badge.svg)](https://github.com/apoordev/thinos/actions/workflows/build.yml)
+
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/thinos)](https://artifacthub.io/packages/search?repo=thinos)
