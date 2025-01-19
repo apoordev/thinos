@@ -85,7 +85,7 @@ jobs:
             org.opencontainers.image.vendor=${{ github.repository_owner }}
             org.opencontainers.image.version=latest
             io.artifacthub.package.deprecated=false
-            io.artifacthub.package.keywords=bootc,apoordev
+            io.artifacthub.package.keywords=bootc,sociallydistant
             io.artifacthub.package.license=Apache-2.0
             io.artifacthub.package.logo-url=${{ env.ARTIFACTHUB_LOGO_URL }}
             io.artifacthub.package.prerelease=false
