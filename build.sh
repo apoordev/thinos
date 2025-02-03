@@ -6,7 +6,7 @@ MAJOR_VERSION_NUMBER="$(sh -c '. /usr/lib/os-release ; echo $VERSION_ID | cut -d
 export MAJOR_VERSION_NUMBER
 
 # Install VDI Tools
-dnf install -y tmux spice-gtk-tools virt-viewer
+dnf install -y tmux virt-viewer
 
 # Install Tailscale
 #curl -Lo /etc/yum.repos.d/tailscale.repo https://pkgs.tailscale.com/stable/fedora/tailscale.repo
