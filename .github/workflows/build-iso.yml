@@ -63,10 +63,6 @@ jobs:
           config-file: ./image-builder-iso.config.toml
           image: ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.DEFAULT_TAG }}
 
-      - name: Patch ISO with our branding
-        run: |
-          just patch-iso-branding 1 ${{ steps.build.outputs.output-path }}
-
       - name: Rename ISO
         id: rename
         env:
