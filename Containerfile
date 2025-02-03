@@ -5,7 +5,6 @@ FROM quay.io/centos-bootc/centos-bootc:stream10
 # CentOS base images: quay.io/centos-bootc/centos-bootc:stream10
 
 COPY ./build.sh /tmp/build.sh
-COPY just /tmp/just/
 
 RUN mkdir -p /var/lib/alternatives && \
     /tmp/build.sh && \
