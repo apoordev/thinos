@@ -1,4 +1,5 @@
-FROM ghcr.io/socially-distant/sericea-main:latest
+#FROM ghcr.io/socially-distant/sericea-main:latest
+FROM quay.io/centos-bootc/centos-bootc:stream10
 
 # Fedora base image: quay.io/fedora/fedora-bootc:41
 # CentOS base images: quay.io/centos-bootc/centos-bootc:stream10
