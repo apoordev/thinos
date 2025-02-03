@@ -1,0 +1,100 @@
+---
+name: Build ISOs
+
+on:
+  workflow_dispatch:
+    inputs:
+      upload-to-cloudflare:
+        description: "Upload to Cloudflare"
+        required: false
+        default: false
+        type: boolean
+  pull_request:
+    branches:
+      - main
+    paths:
+      - './image-builder-iso.config.toml'
+      - './.github/workflows/build-iso.yml'
+      - './Justfile'
+
+env:
+  IMAGE_REGISTRY: "ghcr.io/${{ github.repository_owner }}"
+  IMAGE_NAME: "bluefin"
+  DEFAULT_TAG: "lts"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build ISOs
+    runs-on: ${{ matrix.platform == 'amd64' && 'ubuntu-24.04' || 'ubuntu-24.04-arm' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [amd64]
+        flavor: ["","hwe", "gdx"]
+    permissions:
+      contents: read
+      packages: read
+      id-token: write
+
+    steps:
+      - name: Install dependencies
+        if: matrix.platform == 'arm64'
+        run: |
+          sudo apt update -y
+          sudo apt install -y \
+            podman
+
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Setup Just
+        uses: extractions/setup-just@dd310ad5a97d8e7b41793f8ef055398d51ad4de6 # v2
+
+      - name: Build ISO
+        id: build
+        uses: ublue-os/bootc-image-builder-action@main
+        with:
+          bootc-image-builder-image: ghcr.io/centos-workstation/bootc-image-builder:latest
+          use-librepo: true
+          config-file: ./image-builder-iso.config.toml
+          image: ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.DEFAULT_TAG }}
+
+      - name: Patch ISO with our branding
+        run: |
+          just patch-iso-branding 1 ${{ steps.build.outputs.output-path }}
+
+      - name: Rename ISO
+        id: rename
+        env:
+          OUTPUT_PATH: ${{ steps.build.outputs.output-path }}
+          OUTPUT_DIRECTORY: ${{ steps.build.outputs.output-directory }}
+          CHECKSUM_PATH: ${{ steps.build.outputs.checksum-path }}
+          IMAGE_NAME: ${{ env.IMAGE_NAME }}
+          PLATFORM: ${{ matrix.platform }}
+          DEFAULT_TAG: ${{ env.DEFAULT_TAG }}
+          FLAVOR: ${{ matrix.flavor }}
+        run: |
+          if [ ${FLAVOR} != "" ] ; then
+            IMAGE_NAME="${IMAGE_NAME}-${FLAVOR}"
+            export IMAGE_NAME
+            echo "IMAGE_NAME=${IMAGE_NAME}" >> $GITHUB_ENV
+          fi
+          if [ $PLATFORM == "amd64" ]; then
+            mv "${OUTPUT_PATH}" "${OUTPUT_DIRECTORY}/${IMAGE_NAME}-${DEFAULT_TAG}.iso"
+            mv "${CHECKSUM_PATH}" "${OUTPUT_DIRECTORY}/${IMAGE_NAME}-${DEFAULT_TAG}.iso-CHECKSUM"
+          else
+            mv "${OUTPUT_PATH}" "${OUTPUT_DIRECTORY}/${IMAGE_NAME}-${DEFAULT_TAG}-${PLATFORM}.iso"
+            mv "${CHECKSUM_PATH}" "${OUTPUT_DIRECTORY}/${IMAGE_NAME}-${DEFAULT_TAG}-${PLATFORM}.iso-CHECKSUM"
+          fi
+
+      - name: Upload to Job Artifacts
+        if: inputs.upload-to-cloudflare == false || github.event_name == 'pull_request'
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
+        with:
+          name: ${{ env.IMAGE_NAME }}-${{ env.DEFAULT_TAG }}-${{ matrix.platform }}-iso
+          if-no-files-found: error
+          path: ${{ steps.build.outputs.output-directory }}
