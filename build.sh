@@ -10,7 +10,7 @@ dnf install -y tmux virt-viewer
 
 # Install Tailscale
 #curl -Lo /etc/yum.repos.d/tailscale.repo https://pkgs.tailscale.com/stable/fedora/tailscale.repo
-dnf config-manager --add-repo "https://pkgs.tailscale.com/stable/rhel/${MAJOR_VERSION_NUMBER}/tailscale.repo"
+dnf config-manager --add-repo "https://pkgs.tailscale.com/stable/centos/${MAJOR_VERSION_NUMBER}/tailscale.repo"
 dnf config-manager --set-disabled tailscale-stable
 dnf -y --enablerepo tailscale-stable install \
 	tailscale
